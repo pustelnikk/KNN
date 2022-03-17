@@ -1,10 +1,12 @@
+from math import dist
 import sys
 import csv
+from turtle import distance
 
 def printList(list):
     for entry in list:
         print(entry)
-def findFloats(list):
+def findVectorSize(list):
     size = 0
     
     for val in list:
@@ -15,6 +17,15 @@ def findFloats(list):
             pass
     return size
 
+def calcDistance(train, test, size):
+
+    distance = 0.0
+    for i in range(size):
+        distance = distance + (float(test[i])-float(train[i]))**2
+    
+    
+    return distance
+
 def main():
 
     if(len(sys.argv) < 4):
@@ -24,7 +35,14 @@ def main():
     train = sys.argv[2]
     test = sys.argv[3]
     trainList = []
-    vectorSize = 0;
+    testList = []
+    
+
+    #
+    #czytanie CSV i przeliczanie wymiaru wektora
+    #
+    #
+
 
     with open(train) as file:
         reader = csv.reader(file, delimiter=",")
@@ -32,11 +50,27 @@ def main():
         for row in reader:
             trainList.append(row)
 
-    
-    #printList(trainList)
-    vectorSize = findFloats(trainList[0])
-    #print(vectorSize)
+    with open(test) as file :
+        reader = csv.reader(file, delimiter=",")
 
+        for row in reader:
+            testList.append(row)
     
+    vectorSize = findVectorSize(trainList[0])
+    
+    
+    #
+    #klasyfikacja
+    #
+    #
+    distances = [ (calcDistance(item, testList[0], size=vectorSize), item[vectorSize]) for item in trainList]
+    
+
+    #sortowanie krotki
+    distances.sort(key= lambda tup : tup[0])
+    printList(distances)
+
+
+
 if __name__ == '__main__' :
     main()
