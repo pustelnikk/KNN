@@ -1,7 +1,7 @@
 from math import dist
 import sys
 import csv
-from turtle import distance
+
 
 def printList(list):
     for entry in list:
@@ -25,18 +25,38 @@ def calcDistance(train, test, size):
     
     
     return distance
+def findClosest(k, distances):
+
+    names = {}
+    
+    for i in range(k):
+        if distances[i][1] not in names:
+            names[distances[i][1]] = 1
+        else:
+            names[distances[i][1]] += 1
+
+    dict(sorted(names.items(), key=lambda item: item[1], reverse = True))
+    
+    return list(names.keys())[0]
+    
+
+
+
+
+
+    
 
 def main():
 
     if(len(sys.argv) < 4):
         sys.exit("Brak argumentow")
 
-    k = sys.argv[1]
+    k = int(sys.argv[1])
     train = sys.argv[2]
     test = sys.argv[3]
     trainList = []
     testList = []
-    
+    accuracy = 0
 
     #
     #czytanie CSV i przeliczanie wymiaru wektora
@@ -63,13 +83,20 @@ def main():
     #klasyfikacja
     #
     #
-    distances = [ (calcDistance(item, testList[0], size=vectorSize), item[vectorSize]) for item in trainList]
-    
+    for i in range(len(testList)):
+        distances = [ (calcDistance(item, testList[i], size=vectorSize), item[vectorSize]) for item in trainList]
+        #sortowanie krotki
+        distances.sort(key= lambda tup : tup[0])
+        #printList(distances)
+        print('\n')
+        klas = findClosest(k,distances)
+        test = testList[i][vectorSize]
+        print("Klasyfikacja: " + klas)
+        print("Test: " + test)
+        if( klas == test ):
+            accuracy +=1
 
-    #sortowanie krotki
-    distances.sort(key= lambda tup : tup[0])
-    printList(distances)
-
+    print("\nAccuracy: " + str(100*float(accuracy)/float(len(testList)))+"%")
 
 
 if __name__ == '__main__' :
