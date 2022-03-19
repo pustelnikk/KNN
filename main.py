@@ -1,4 +1,4 @@
-from math import dist
+import random
 import sys
 import csv
 
@@ -8,7 +8,6 @@ def printList(list):
         print(entry)
 def findVectorSize(list):
     size = 0
-    
     for val in list:
         try:
             float(val)
@@ -22,9 +21,8 @@ def calcDistance(train, test, size):
     distance = 0.0
     for i in range(size):
         distance = distance + (float(test[i])-float(train[i]))**2
-    
-    
     return distance
+
 def findClosest(k, distances):
 
     names = {}
@@ -37,6 +35,8 @@ def findClosest(k, distances):
 
     dict(sorted(names.items(), key=lambda item: item[1], reverse = True))
     
+    print(names)
+
     return list(names.keys())[0]
     
 
@@ -78,6 +78,14 @@ def main():
     
     vectorSize = findVectorSize(trainList[0])
     
+    #randomowe rekordy
+    
+    trainList = random.sample(trainList, 15)
+
+    testList = random.sample(testList, 15)
+
+    print(trainList)
+    print(testList)
     
     #
     #klasyfikacja
