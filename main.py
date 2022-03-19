@@ -6,6 +6,7 @@ import csv
 def printList(list):
     for entry in list:
         print(entry)
+
 def findVectorSize(list):
     size = 0
     for val in list:
@@ -16,6 +17,10 @@ def findVectorSize(list):
             pass
     return size
 
+
+#
+#zwykle liczenie odleglosci wektorow
+#
 def calcDistance(train, test, size):
 
     distance = 0.0
@@ -34,7 +39,6 @@ def findClosest(k, distances):
             names[distances[i][1]] += 1
 
     dict(sorted(names.items(), key=lambda item: item[1], reverse = True))
-    
     print(names)
 
     return list(names.keys())[0]
@@ -59,11 +63,8 @@ def main():
     accuracy = 0
 
     #
-    #czytanie CSV i przeliczanie wymiaru wektora
+    #czytanie CSV 
     #
-    #
-
-
     with open(train) as file:
         reader = csv.reader(file, delimiter=",")
 
@@ -76,20 +77,21 @@ def main():
         for row in reader:
             testList.append(row)
     
+    #
+    #przeliczanie wymiaru wektora
+    #
     vectorSize = findVectorSize(trainList[0])
     
+    #
     #randomowe rekordy
-    
+    #
     trainList = random.sample(trainList, 15)
-
     testList = random.sample(testList, 15)
-
     print(trainList)
     print(testList)
     
     #
     #klasyfikacja
-    #
     #
     for i in range(len(testList)):
         distances = [ (calcDistance(item, testList[i], size=vectorSize), item[vectorSize]) for item in trainList]
