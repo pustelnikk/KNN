@@ -2,6 +2,8 @@ import random
 import sys
 import csv
 
+from numpy import vectorize
+
 
 def printList(list):
     for entry in list:
@@ -16,7 +18,6 @@ def findVectorSize(list):
         except:
             pass
     return size
-
 
 #
 #zwykle liczenie odleglosci wektorow
@@ -42,11 +43,38 @@ def findClosest(k, distances):
     print(names)
 
     return list(names.keys())[0]
+
+def classify(trainList, testList, vectorSize, k):
+    accuracy = 0
+
+    for i in range(len(testList)):
+        distances = [ (calcDistance(item, testList[i], size=vectorSize), item[vectorSize]) for item in trainList]
+        #sortowanie krotki
+        distances.sort(key= lambda tup : tup[0])
+        #printList(distances)
+        print('\n')
+        klas = findClosest(k,distances)
+        test = testList[i][vectorSize]
+        print("Klasyfikacja: " + klas)
+        print("Test: " + test)
+        if( klas == test ):
+            accuracy +=1
+
+    print("\nAccuracy: " + str(100*float(accuracy)/float(len(testList)))+"%")
+
+def classifyByVector(trainList, testVector, vectorSize, k):
     
 
-
-
-
+    for i in range(len(trainList)):
+        distances = [ (calcDistance(item, testVector, size=vectorSize), item[vectorSize]) for item in trainList]
+        #sortowanie krotki
+        distances.sort(key= lambda tup : tup[0])
+        #printList(distances)
+        print('\n')
+        klas = findClosest(k,distances)
+        
+        print("Klasyfikacja: " + klas)
+        
 
     
 
@@ -85,28 +113,27 @@ def main():
     #
     #randomowe rekordy
     #
-    trainList = random.sample(trainList, 15)
-    testList = random.sample(testList, 15)
+    trainList = random.sample(trainList, 5)
+    #testList = random.sample(testList, 15)
     print(trainList)
     print(testList)
     
     #
     #klasyfikacja
     #
-    for i in range(len(testList)):
-        distances = [ (calcDistance(item, testList[i], size=vectorSize), item[vectorSize]) for item in trainList]
-        #sortowanie krotki
-        distances.sort(key= lambda tup : tup[0])
-        #printList(distances)
-        print('\n')
-        klas = findClosest(k,distances)
-        test = testList[i][vectorSize]
-        print("Klasyfikacja: " + klas)
-        print("Test: " + test)
-        if( klas == test ):
-            accuracy +=1
+    classify(trainList, testList, vectorSize, k)
 
-    print("\nAccuracy: " + str(100*float(accuracy)/float(len(testList)))+"%")
+    print(f'Wprowadz wektor {vectorSize} wymiarowy w formacie "a,b,c,...x"\nType exit to exit')
+    while True:
+        temp = input()
+        if(temp == "exit"):
+            break
+        vector = str(temp).split(",")
+        
+        classifyByVector(trainList, vector, vectorSize, k)
+        
+
+
 
 
 if __name__ == '__main__' :
