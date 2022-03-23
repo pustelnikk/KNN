@@ -2,8 +2,6 @@ import random
 import sys
 import csv
 
-from numpy import vectorize
-
 
 def printList(list):
     for entry in list:
@@ -39,7 +37,7 @@ def findClosest(k, distances):
         else:
             names[distances[i][1]] += 1
 
-    dict(sorted(names.items(), key=lambda item: item[1], reverse = True))
+    names = dict(sorted(names.items(), key=lambda item: item[1], reverse=True))
     print(names)
 
     return list(names.keys())[0]
@@ -73,11 +71,8 @@ def classifyByVector(trainList, testVector, vectorSize, k):
         print('\n')
         klas = findClosest(k,distances)
         
-        print("Klasyfikacja: " + klas)
+    print("Klasyfikacja: " + klas)
         
-
-    
-
 def main():
 
     if(len(sys.argv) < 4):
@@ -113,7 +108,7 @@ def main():
     #
     #randomowe rekordy
     #
-    trainList = random.sample(trainList, 5)
+    #trainList = random.sample(trainList, 15)
     #testList = random.sample(testList, 15)
     print(trainList)
     print(testList)
@@ -131,10 +126,6 @@ def main():
         vector = str(temp).split(",")
         
         classifyByVector(trainList, vector, vectorSize, k)
-        
-
-
-
 
 if __name__ == '__main__' :
     main()
